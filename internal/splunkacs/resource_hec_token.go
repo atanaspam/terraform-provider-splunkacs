@@ -1,4 +1,4 @@
-package provider
+package splunkacs
 
 import (
 	"context"
@@ -62,11 +62,19 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				MarkdownDescription: "The indexes a HEC Token is allowed to publish it.",
 				Type:                types.SetType{ElemType: types.StringType},
 				Optional:            true,
+				Computed:            true,
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.UseStateForUnknown(),
+				},
 			},
 			"default_host": {
 				MarkdownDescription: "The default host associated with a HEC Token.",
 				Type:                types.StringType,
 				Optional:            true,
+				Computed:            true,
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.UseStateForUnknown(),
+				},
 			},
 			"default_index": {
 				MarkdownDescription: "The default index associated with a HEC Token.",
@@ -89,23 +97,26 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				Type:                types.BoolType,
 				Optional:            true,
 				Computed:            true,
-				// PlanModifiers: tfsdk.AttributePlanModifiers{
-				// 	resource.UseStateForUnknown(),
-				// },
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.UseStateForUnknown(),
+				},
 			},
 			"name": {
 				MarkdownDescription: "The name of the HEC token.",
 				Type:                types.StringType,
 				Required:            true,
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.RequiresReplace(),
+				},
 			},
 			"use_ack": {
 				MarkdownDescription: "Is indexer acknoldegment enabled for this HEC token.",
 				Type:                types.BoolType,
 				Optional:            true,
 				Computed:            true,
-				// PlanModifiers: tfsdk.AttributePlanModifiers{
-				// 	resource.UseStateForUnknown(),
-				// },
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.UseStateForUnknown(),
+				},
 			},
 			"token": {
 				MarkdownDescription: "The token value.",
@@ -113,12 +124,11 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				Computed:            true,
 				Optional:            true,
 			},
+			// "timeouts": timeouts.Attributes(ctx, timeouts.Opts{
+			// 	Create: true,
+			// 	Update: true,
+			// }),
 		},
-		// Blocks: map[string]tfsdk.Block{
-		// 	"timeouts": timeouts.Block(ctx, timeouts.Opts{
-		// 		Create: true,
-		// 	}),
-		// },
 	}, nil
 }
 
@@ -172,7 +182,7 @@ func (r *HecTokenResource) Create(ctx context.Context, req resource.CreateReques
 	request := splunkacs.HttpEventCollectorCreateRequest{HecTokenSpec: hecToken}
 
 	// Set and initiate the timeout
-	// defaultCreateTimeout := 20 * time.Minute
+	// defaultCreateTimeout := 2 * time.Minute
 	// createTimeout := timeouts.Create(ctx, data.Timeouts, defaultCreateTimeout)
 	// ctx, cancel := context.WithTimeout(ctx, createTimeout)
 	// defer cancel()
@@ -183,7 +193,7 @@ func (r *HecTokenResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	hecGetResp, err := waitHecStatus(ctx, r.client, hecResp)
+	hecGetResp, err := waitHecCreatePropagation(ctx, r.client, hecResp)
 	if err != nil {
 		resp.Diagnostics.AddError("Unexpected error while waiting for HEC Token", err.Error())
 		return
@@ -230,6 +240,7 @@ func (r *HecTokenResource) Read(ctx context.Context, req resource.ReadRequest, r
 	for _, index := range hecResp.HttpEventCollector.Spec.AllowedIndexes {
 		allowedIndexesResult = append(allowedIndexesResult, types.StringValue(index))
 	}
+	data.AllowedIndexes = allowedIndexesResult
 	data.DefaultHost = types.StringValue(hecResp.HttpEventCollector.Spec.DefaultHost)
 	data.DefaultIndex = types.StringValue(hecResp.HttpEventCollector.Spec.DefaultIndex)
 	data.DefaultSource = types.StringValue(hecResp.HttpEventCollector.Spec.DefaultSource)
@@ -238,6 +249,7 @@ func (r *HecTokenResource) Read(ctx context.Context, req resource.ReadRequest, r
 	data.Name = types.StringValue(hecResp.HttpEventCollector.Spec.Name)
 	data.UseACK = types.BoolValue(hecResp.HttpEventCollector.Spec.UseACK)
 	data.Token = types.StringValue(hecResp.HttpEventCollector.Token)
+	data.Id = types.StringValue(hecResp.HttpEventCollector.Spec.Name)
 
 	tflog.Trace(ctx, "read a resource")
 
@@ -268,21 +280,29 @@ func (r *HecTokenResource) Update(ctx context.Context, req resource.UpdateReques
 		DefaultSource:     data.DefaultSource.ValueString(),
 		DefaultSourcetype: data.DefaultSourcetype.ValueString(),
 		Disabled:          data.Disabled.ValueBool(),
-		Name:              data.Token.ValueString(),
+		Name:              data.Name.ValueString(),
 		UseACK:            data.UseACK.ValueBool(),
 	}
 
 	request := splunkacs.HttpEventCollectorUpdateRequest{HecTokenSpec: hecToken}
 
-	hecUpdateResp, _, err := r.client.UpdateHecToken(request)
-	if err != nil || hecUpdateResp.Code != "200" {
+	_, _, err := r.client.UpdateHecToken(data.Name.ValueString(), request)
+	// hecUpdateResp, _, err := r.client.UpdateHecToken(data.Name.ValueString(), request)
+	// Splunk Docs and Splunk API response seem to differ. While the snippet below makes sense, it is commented out
+	// because the Splunk API actually does not return the code.
+	// if err != nil || hecUpdateResp.Code != "202" {
+	// 	resp.Diagnostics.AddError("Unexpected error while updating HEC Token", err.Error())
+	// 	return
+	// }
+	if err != nil {
 		resp.Diagnostics.AddError("Unexpected error while updating HEC Token", err.Error())
 		return
 	}
 
-	hecGetResp, _, err := r.client.GetHecToken(data.Token.ValueString())
+	// Given the response from the Splunk API, we need further API calls to confirm if the changes have taken effect.
+	hecGetResp, err := waitHecUpdatePropagation(ctx, r.client, hecToken)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to get HEC token", err.Error())
+		resp.Diagnostics.AddError("Encountered an error while waiting for HEC Token update to propagate", err.Error())
 		return
 	}
 
@@ -290,6 +310,7 @@ func (r *HecTokenResource) Update(ctx context.Context, req resource.UpdateReques
 	for _, index := range hecGetResp.HttpEventCollector.Spec.AllowedIndexes {
 		allowedIndexesResult = append(allowedIndexesResult, types.StringValue(index))
 	}
+	data.AllowedIndexes = allowedIndexesResult
 	data.DefaultHost = types.StringValue(hecGetResp.HttpEventCollector.Spec.DefaultHost)
 	data.DefaultIndex = types.StringValue(hecGetResp.HttpEventCollector.Spec.DefaultIndex)
 	data.DefaultSource = types.StringValue(hecGetResp.HttpEventCollector.Spec.DefaultSource)
@@ -298,6 +319,7 @@ func (r *HecTokenResource) Update(ctx context.Context, req resource.UpdateReques
 	data.Name = types.StringValue(hecGetResp.HttpEventCollector.Spec.Name)
 	data.UseACK = types.BoolValue(hecGetResp.HttpEventCollector.Spec.UseACK)
 	data.Token = types.StringValue(hecGetResp.HttpEventCollector.Token)
+	data.Id = types.StringValue(hecGetResp.HttpEventCollector.Spec.Name)
 
 	tflog.Trace(ctx, "updated a resource")
 
@@ -315,7 +337,7 @@ func (r *HecTokenResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	_, _, err := r.client.DeleteHecToken(data.Name.String())
+	_, _, err := r.client.DeleteHecToken(data.Name.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Unexpected error while updating HEC Token", err.Error())
 		return
@@ -327,15 +349,17 @@ func (r *HecTokenResource) ImportState(ctx context.Context, req resource.ImportS
 }
 
 /* HELPERS */
-func waitHecStatus(ctx context.Context, client *splunkacs.SplunkAcsClient, hecCreateResponse *splunkacs.HttpEventCollectorCreateResponse) (*splunkacs.HttpEventCollectorGetResponse, error) {
+func waitHecCreatePropagation(ctx context.Context, client *splunkacs.SplunkAcsClient, hecCreateResponse *splunkacs.HttpEventCollectorCreateResponse) (*splunkacs.HttpEventCollectorGetResponse, error) {
 	// TODO: Get rid of the for loop. Technically the timeouts should cover for us and we can fo a while true
 	// TODO: Add logging inside for each iteration in the loop
 	// TODO: How do I do this using the native framework? Seems to be possible in SDKv2...
 	i := 0
 	retries := 20
 	for i < retries {
+		tflog.Debug(ctx, fmt.Sprintf("waiting for HEC token to become available. Retry: %d", i))
 		hecResp, httpResp, err := client.GetHecToken(hecCreateResponse.CreateResponseItem.Spec.Name)
 		if err != nil && httpResp.StatusCode != 404 {
+			tflog.Error(ctx, "encountered an unexpected error while waiting for HEC to become avaialable")
 			return nil, err
 		} else if err != nil && httpResp.StatusCode == 404 {
 			i++
@@ -344,5 +368,32 @@ func waitHecStatus(ctx context.Context, client *splunkacs.SplunkAcsClient, hecCr
 		}
 		return hecResp, nil
 	}
-	return nil, fmt.Errorf("failed to fetch a valid HEC Token defintion after %d retries. Exiting", retries)
+	return nil, fmt.Errorf("failed to fetch a valid HEC token defintion after %d retries", retries)
+}
+
+// TODO can we pass an interface instead of the specific spec. This will allow us to make this waiter generic
+// TODO why doesn't this exist in the plugin framework? :(
+// https://github.com/hashicorp/terraform-plugin-framework/issues/513
+// Reads the state of a HEC token and compares it against an expected state until a timeout is reached, hoping to work around eventual consistency
+func waitHecUpdatePropagation(ctx context.Context, client *splunkacs.SplunkAcsClient, expectedState splunkacs.HecTokenSpec) (*splunkacs.HttpEventCollectorGetResponse, error) {
+	i := 0
+	retries := 10
+	var lastResp *splunkacs.HttpEventCollectorGetResponse
+	for i < retries {
+		tflog.Debug(ctx, fmt.Sprintf("waiting for HEC token to become eventually consistent. Retry: %d", i))
+		hecResp, _, err := client.GetHecToken(expectedState.Name)
+		if err != nil {
+			tflog.Error(ctx, "encountered an unexpected error while waiting for HEC token propagation")
+			return nil, err
+		}
+		if hecResp.HttpEventCollector.Spec.Equal(expectedState) {
+			return hecResp, nil
+		}
+		lastResp = hecResp
+		i++
+		time.Sleep(10 * time.Second)
+		continue
+	}
+	tflog.Error(ctx, fmt.Sprintf("%v", lastResp.HttpEventCollector))
+	return nil, fmt.Errorf("failed to obtain the expected HEC token values after %d retries", i)
 }
