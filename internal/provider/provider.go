@@ -139,10 +139,9 @@ func (p *AcsProvider) DataSources(ctx context.Context) []func() datasource.DataS
 	}
 }
 
-func New(version string) func() provider.Provider {
-	return func() provider.Provider {
-		return &AcsProvider{
-			version: version,
-		}
+// New is a helper function to simplify provider server and testing implementation.
+func New() provider.Provider {
+	return &AcsProvider{
+		version: "dev",
 	}
 }

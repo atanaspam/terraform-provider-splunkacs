@@ -39,19 +39,6 @@ type HttpEventCollectorToken struct {
 	Token             types.String   `tfsdk:"token"`
 }
 
-// HecTokenSpec maps the HttpEventCollectorToken Spec schema data
-// type HecTokenSpec struct {
-// 	AllowedIndexes    []string `tfsdk:"allowed_indexes"`
-// 	DefaultHost       *string  `tfsdk:"default_host"`
-// 	DefaultIndex      *string  `tfsdk:"default_index""`
-// 	DefaultSource     *string  `tfsdk:"default_source"`
-// 	DefaultSourcetype *string  `tfsdk:"default_sourcetype"`
-// 	Disabled          *bool    `tfsdk:"disabled"`
-// 	Name              *string  `tfsdk:"name"`
-// 	UseACK            *bool    `tfsdk:"use_ack"`
-// 	Token *string `tfsdk:"token"`
-// }
-
 func (d *hecTokenDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_hec_token"
 }
@@ -162,6 +149,7 @@ func (d *hecTokenDataSource) Read(ctx context.Context, req datasource.ReadReques
 	state.Name = types.StringValue(hecResp.HttpEventCollector.Spec.Name)
 	state.UseACK = types.BoolValue(hecResp.HttpEventCollector.Spec.UseACK)
 	state.Token = types.StringValue(hecResp.HttpEventCollector.Token)
+	state.Id = types.StringValue(hecResp.HttpEventCollector.Spec.Name)
 
 	tflog.Trace(ctx, "read a data source")
 
