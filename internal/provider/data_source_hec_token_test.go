@@ -14,7 +14,7 @@ func TestAccHecTokenDataSource(t *testing.T) {
 			{
 				Config: providerConfig + `
 data "splunkacs_hec_token" "test" {
-	name = "atanas-test"
+	name = "splunkacs-provider-ci-p"
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify number of coffees returned
@@ -27,10 +27,10 @@ data "splunkacs_hec_token" "test" {
 					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "default_sourcetype", "_json"),
 					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "disabled", "false"),
 					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "use_ack", "false"),
-					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "name", "atanas-test"),
+					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "name", "splunkacs-provider-ci-p"),
 
 					// Verify placeholder id attribute
-					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "id", "atanas-test"),
+					resource.TestCheckResourceAttr("data.splunkacs_hec_token.test", "id", "splunkacs-provider-ci-p"),
 				),
 			},
 		},
