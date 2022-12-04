@@ -14,8 +14,8 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ datasource.DataSource = &hecTokenDataSource{}
-var _ datasource.DataSourceWithConfigure = &hecTokenDataSource{}
+var _ datasource.DataSource = &indexDataSource{}
+var _ datasource.DataSourceWithConfigure = &indexDataSource{}
 
 func NewIndexDataSource() datasource.DataSource {
 	return &indexDataSource{}

@@ -48,7 +48,7 @@ func (r *IndexResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *IndexResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Creates an Index",
+		MarkdownDescription: "Creates a Splunk Index",
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
 				MarkdownDescription: "ID of the Index.",

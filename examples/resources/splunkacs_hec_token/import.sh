@@ -1,1 +1,1 @@
-terraform import splunkacs_index.example "example"
+terraform import splunkacs_hec_token.example "example"
