@@ -133,12 +133,14 @@ func (p *AcsProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *AcsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewHecTokenResource,
+		NewIndexResource,
 	}
 }
 
 func (p *AcsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewHecTokenDataSource,
+		NewIndexDataSource,
 	}
 }
 

@@ -341,7 +341,7 @@ func (r *HecTokenResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	_, _, err := r.client.DeleteHecToken(data.Name.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("Unexpected error while updating HEC Token", err.Error())
+		resp.Diagnostics.AddError("Unexpected error while deleting HEC Token", err.Error())
 		return
 	}
 }
