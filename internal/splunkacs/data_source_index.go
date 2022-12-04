@@ -49,12 +49,9 @@ func (d *indexDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Dia
 				MarkdownDescription: "The type of data the index holds. Possible values: `event` or `metric`.",
 				Type:                types.StringType,
 				Computed:            true,
-				// 	Validators: []tfsdk.AttributeValidator{
-				// 		stringvalidator.OneOf(validator.AllowedIndexTypes()...),
-				// 	},
 			},
 			"searchable_days": {
-				MarkdownDescription: "Number of days the index is searchable..",
+				MarkdownDescription: "Number of days the index is searchable.",
 				Type:                types.Int64Type,
 				Computed:            true,
 			},

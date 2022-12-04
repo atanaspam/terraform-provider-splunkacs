@@ -48,7 +48,7 @@ func (r *IndexResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *IndexResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Creates a Http Event Collector Token",
+		MarkdownDescription: "Creates an Index",
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
 				MarkdownDescription: "ID of the Index.",
@@ -78,7 +78,7 @@ func (r *IndexResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagn
 				},
 			},
 			"searchable_days": {
-				MarkdownDescription: "Number of days the index is searchable..",
+				MarkdownDescription: "Number of days the index is searchable.",
 				Type:                types.Int64Type,
 				Computed:            true,
 				Optional:            true,
@@ -300,8 +300,8 @@ func waitIndexPropagation(ctx context.Context, client *splunkacs.SplunkAcsClient
 			}
 			result := *expectedState == actualState
 			tflog.Info(ctx, fmt.Sprintf("found valid response and expected state - comparing results. Result: %v\n", result))
-			tflog.Info(ctx, fmt.Sprintf("value1: %v\n", *expectedState))
-			tflog.Info(ctx, fmt.Sprintf("value2: %v\n", actualState))
+			tflog.Debug(ctx, fmt.Sprintf("value1: %v\n", *expectedState))
+			tflog.Debug(ctx, fmt.Sprintf("value2: %v\n", actualState))
 			if !result {
 				i++
 				time.Sleep(10 * time.Second)

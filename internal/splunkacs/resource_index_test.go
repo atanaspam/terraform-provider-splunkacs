@@ -32,12 +32,6 @@ resource "splunkacs_index" "test" {
 					resource.TestCheckResourceAttr("splunkacs_index.test", "id", "splunkacs-index-rs-ci"),
 				),
 			},
-			// // Wait for index creation to propagate
-			// {
-			// 	PreConfig:    func() { time.Sleep(300 * time.Second) },
-			// 	SkipFunc:     skip,
-			// 	RefreshState: true,
-			// },
 			// ImportState testing
 			{
 				ResourceName:      "splunkacs_index.test",

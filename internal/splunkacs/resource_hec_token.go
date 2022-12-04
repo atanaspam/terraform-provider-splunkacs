@@ -382,7 +382,7 @@ func waitHecUpdatePropagation(ctx context.Context, client *splunkacs.SplunkAcsCl
 	retries := 10
 	var lastResp *splunkacs.HttpEventCollectorGetResponse
 	for i < retries {
-		tflog.Debug(ctx, fmt.Sprintf("waiting for HEC token to become eventually consistent. Retry: %d", i))
+		tflog.Info(ctx, fmt.Sprintf("waiting for HEC token to become eventually consistent. Retry: %d", i))
 		hecResp, _, err := client.GetHecToken(expectedState.Name)
 		if err != nil {
 			tflog.Error(ctx, "encountered an unexpected error while waiting for HEC token propagation")
