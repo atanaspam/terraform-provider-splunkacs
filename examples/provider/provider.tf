@@ -1,4 +1,4 @@
 provider "splunkacs" {
-  deployment_name = "deployment_name" # Or use SPLUNK_DEPLOYMENT_NAME env var
-  token           = ""                # Or use SPLUNK_AUTH_TOKEN env var
+  deployment_name = "csms-2io6tw-47150"
+  token           = "sampleSplunkTokenValue"
 }

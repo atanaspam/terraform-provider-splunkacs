@@ -36,15 +36,18 @@ func (p *AcsProvider) Metadata(ctx context.Context, req provider.MetadataRequest
 
 func (p *AcsProvider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
+		MarkdownDescription: "The Splunk Admin Config Service (ACS) provider can interact with the resources supported by the Splunk Admin Config Service. The provider needs to be configured with the proper credentials before it can be used. It requires terraform version 1.0 or later.",
 		Attributes: map[string]tfsdk.Attribute{
 			"deployment_name": {
-				Type:     types.StringType,
-				Optional: true,
+				Type:                types.StringType,
+				Optional:            true,
+				MarkdownDescription: "he URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.",
 			},
 			"token": {
-				Type:      types.StringType,
-				Optional:  true,
-				Sensitive: true,
+				Type:                types.StringType,
+				Optional:            true,
+				Sensitive:           true,
+				MarkdownDescription: "The JWT authentication token you create in Splunk Cloud Platform. Can be set via the `SPLUNK_AUTH_TOKEN` environment variable.",
 			},
 		},
 	}, nil

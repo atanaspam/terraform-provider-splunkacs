@@ -7,9 +7,6 @@ on:
   pull_request:
     paths-ignore:
       - 'README.md'
-  push:
-    paths-ignore:
-      - 'README.md'
 
 # Testing only needs permissions to read the repository contents.
 permissions:
@@ -28,8 +25,12 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - run: go mod download
-      - run: go build -v .
-
+      - name: Run linters
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+      - run: make build
+  
   generate:
     runs-on: ubuntu-latest
     steps:
@@ -38,13 +39,13 @@ jobs:
         with:
           go-version-file: 'go.mod'
           cache: true
-      - run: go generate ./...
+      - run: make generate
       - name: git diff
         run: |
           git diff --compact-summary --exit-code || \
             (echo; echo "Unexpected difference in directories after code generation. Run 'go generate ./...' command and commit."; exit 1)
 
-  # As much as I'd like to run tests automatically, I's like to get a secure testing env first. 
+  # As much as I'd like to run tests automatically, I'd like to get a secure testing env first. 
   # Until then, code below will be commented out
 
   # # Run acceptance tests in a matrix with Terraform CLI versions

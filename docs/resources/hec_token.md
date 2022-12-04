@@ -17,12 +17,12 @@ Creates a Http Event Collector Token
 
 ### Required
 
-- `default_index` (String) The default index associated with a HEC Token.
+- `default_index` (String) The default index associated with this HEC Token.
 - `name` (String) The name of the HEC token.
 
 ### Optional
 
-- `allowed_indexes` (Set of String) The indexes a HEC Token is allowed to publish it.
+- `allowed_indexes` (Set of String) The indexes a HEC Token is allowed to publish data.
 - `default_host` (String) The default host associated with a HEC Token.
 - `default_source` (String) The default source value assigned to the data from this HEC Token.
 - `default_sourcetype` (String) The default sourcetype assigned to the data from this HEC Token.
@@ -32,6 +32,6 @@ Creates a Http Event Collector Token
 
 ### Read-Only
 
-- `id` (String) Id of the HEC token.
+- `id` (String) ID of the HEC token.
 
 
