@@ -341,7 +341,7 @@ func (r *HecTokenResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	_, _, err := r.client.DeleteHecToken(data.Name.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("Unexpected error while updating HEC Token", err.Error())
+		resp.Diagnostics.AddError("Unexpected error while deleting HEC Token", err.Error())
 		return
 	}
 }
@@ -382,7 +382,7 @@ func waitHecUpdatePropagation(ctx context.Context, client *splunkacs.SplunkAcsCl
 	retries := 10
 	var lastResp *splunkacs.HttpEventCollectorGetResponse
 	for i < retries {
-		tflog.Debug(ctx, fmt.Sprintf("waiting for HEC token to become eventually consistent. Retry: %d", i))
+		tflog.Info(ctx, fmt.Sprintf("waiting for HEC token to become eventually consistent. Retry: %d", i))
 		hecResp, _, err := client.GetHecToken(expectedState.Name)
 		if err != nil {
 			tflog.Error(ctx, "encountered an unexpected error while waiting for HEC token propagation")
