@@ -50,5 +50,5 @@ resource "splunkacs_hec_token" "example" {
 Import is supported using the following syntax:
 
 ```shell
-terraform import splunkacs_index.example "example"
+terraform import splunkacs_hec_token.example "example"
 ```

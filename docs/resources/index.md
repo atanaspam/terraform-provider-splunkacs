@@ -3,12 +3,12 @@
 page_title: "splunkacs_index Resource - terraform-provider-splunkacs"
 subcategory: ""
 description: |-
-  Creates an Index
+  Creates a Splunk Index
 ---
 
 # splunkacs_index (Resource)
 
-Creates an Index
+Creates a Splunk Index
 
 ## Example Usage
 
@@ -45,5 +45,5 @@ resource "splunkacs_index" "test" {
 Import is supported using the following syntax:
 
 ```shell
-terraform import splunkacs_hec_token.example "example"
+terraform import splunkacs_index.example "example"
 ```
