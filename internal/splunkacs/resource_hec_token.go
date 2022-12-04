@@ -54,12 +54,15 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 		MarkdownDescription: "Creates a Http Event Collector Token",
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
-				MarkdownDescription: "Id of the HEC token.",
+				MarkdownDescription: "ID of the HEC token.",
 				Type:                types.StringType,
 				Computed:            true,
+				PlanModifiers: tfsdk.AttributePlanModifiers{
+					resource.UseStateForUnknown(),
+				},
 			},
 			"allowed_indexes": {
-				MarkdownDescription: "The indexes a HEC Token is allowed to publish it.",
+				MarkdownDescription: "The indexes a HEC Token is allowed to publish data.",
 				Type:                types.SetType{ElemType: types.StringType},
 				Optional:            true,
 				Computed:            true,
@@ -77,7 +80,7 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				},
 			},
 			"default_index": {
-				MarkdownDescription: "The default index associated with a HEC Token.",
+				MarkdownDescription: "The default index associated with this HEC Token.",
 				Type:                types.StringType,
 				Optional:            false,
 				Required:            true,
@@ -122,7 +125,6 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				MarkdownDescription: "The token value.",
 				Type:                types.StringType,
 				Computed:            true,
-				Optional:            true,
 			},
 			// "timeouts": timeouts.Attributes(ctx, timeouts.Opts{
 			// 	Create: true,
@@ -368,13 +370,13 @@ func waitHecCreatePropagation(ctx context.Context, client *splunkacs.SplunkAcsCl
 		}
 		return hecResp, nil
 	}
-	return nil, fmt.Errorf("failed to fetch a valid HEC token defintion after %d retries", retries)
+	return nil, fmt.Errorf("failed to fetch a valid HEC token definition after %d retries", retries)
 }
 
+// Reads the state of a HEC token and compares it against an expected state until a timeout is reached, hoping to work around eventual consistency
 // TODO can we pass an interface instead of the specific spec. This will allow us to make this waiter generic
 // TODO why doesn't this exist in the plugin framework? :(
 // https://github.com/hashicorp/terraform-plugin-framework/issues/513
-// Reads the state of a HEC token and compares it against an expected state until a timeout is reached, hoping to work around eventual consistency
 func waitHecUpdatePropagation(ctx context.Context, client *splunkacs.SplunkAcsClient, expectedState splunkacs.HecTokenSpec) (*splunkacs.HttpEventCollectorGetResponse, error) {
 	i := 0
 	retries := 10

@@ -19,15 +19,6 @@ import (
 // can be customized.
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
-var (
-	// these will be set by the goreleaser configuration
-	// to appropriate values for the compiled binary
-	version string = "dev"
-
-	// goreleaser can also pass the specific commit if you want
-	// commit  string = ""
-)
-
 func main() {
 	var debug bool
 
@@ -36,7 +27,7 @@ func main() {
 
 	opts := providerserver.ServeOpts{
 		// TODO: Update this string with the published name of your provider.
-		Address: "atanaspam.com/atanaspam/splunkacs",
+		Address: "registry.terraform.io/atanaspam/splunkacs",
 		Debug:   debug,
 	}
 

@@ -3,19 +3,19 @@
 page_title: "splunkacs Provider"
 subcategory: ""
 description: |-
-  
+  The Splunk Admin Config Service (ACS) provider can interact with the resources supported by the Splunk Admin Config Service. The provider needs to be configured with the proper credentials before it can be used. It requires terraform version 1.0 or later.
 ---
 
 # splunkacs Provider
 
-
+The Splunk Admin Config Service (ACS) provider can interact with the resources supported by the Splunk Admin Config Service. The provider needs to be configured with the proper credentials before it can be used. It requires terraform version 1.0 or later.
 
 ## Example Usage
 
 ```terraform
 provider "splunkacs" {
-  deployment_name = "deployment_name" # Or use SPLUNK_DEPLOYMENT_NAME env var
-  token           = ""                # Or use SPLUNK_AUTH_TOKEN env var
+  deployment_name = "csms-2io6tw-47150"
+  token           = "sampleSplunkTokenValue"
 }
 ```
 
@@ -24,5 +24,5 @@ provider "splunkacs" {
 
 ### Optional
 
-- `deployment_name` (String)
-- `token` (String, Sensitive)
+- `deployment_name` (String) he URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.
+- `token` (String, Sensitive) The JWT authentication token you create in Splunk Cloud Platform. Can be set via the `SPLUNK_AUTH_TOKEN` environment variable.

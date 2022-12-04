@@ -49,12 +49,12 @@ func (d *hecTokenDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
-				MarkdownDescription: "Id of the HEC token.",
+				MarkdownDescription: "ID of the HEC token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
 			"allowed_indexes": {
-				MarkdownDescription: "The indexes a HEC Token is allowed to publish it.",
+				MarkdownDescription: "The indexes a HEC Token is allowed to publish data.",
 				Type:                types.SetType{ElemType: types.StringType},
 				Computed:            true,
 			},
@@ -64,7 +64,7 @@ func (d *hecTokenDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 				Computed:            true,
 			},
 			"default_index": {
-				MarkdownDescription: "The default index associated with a HEC Token.",
+				MarkdownDescription: "The default index associated with this HEC Token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
