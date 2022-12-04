@@ -27,11 +27,11 @@ Creates a Http Event Collector Token
 - `default_source` (String) The default source value assigned to the data from this HEC Token.
 - `default_sourcetype` (String) The default sourcetype assigned to the data from this HEC Token.
 - `disabled` (Boolean) The state of the HEC token.
-- `token` (String) The token value.
 - `use_ack` (Boolean) Is indexer acknoldegment enabled for this HEC token.
 
 ### Read-Only
 
 - `id` (String) ID of the HEC token.
+- `token` (String) The token value.
 
 
