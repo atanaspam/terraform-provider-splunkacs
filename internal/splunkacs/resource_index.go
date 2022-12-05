@@ -90,12 +90,12 @@ func (r *IndexResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagn
 				Optional:            true,
 			},
 			"total_event_count": {
-				MarkdownDescription: "The total number of events in an index.",
+				MarkdownDescription: "The total number of events in the index.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
 			"total_raw_size_mb": {
-				MarkdownDescription: "The total amount of raw data in an index in megabytes.",
+				MarkdownDescription: "The total amount of raw data in the index in megabytes.",
 				Type:                types.StringType,
 				Computed:            true,
 			},

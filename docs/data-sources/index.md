@@ -31,7 +31,7 @@ data "splunkacs_index" "example" {
 - `id` (String) ID of the Index.
 - `max_data_size_mb` (Number) The maximum size of the index in megabytes.
 - `searchable_days` (Number) Number of days the index is searchable.
-- `total_event_count` (String) The total number of events in an index.
-- `total_raw_size_mb` (String) The total amount of raw data in an index in megabytes.
+- `total_event_count` (String) The total number of events in the index.
+- `total_raw_size_mb` (String) The total amount of raw data in the index in megabytes.
 
 

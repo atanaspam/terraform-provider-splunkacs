@@ -37,8 +37,8 @@ resource "splunkacs_index" "test" {
 ### Read-Only
 
 - `id` (String) ID of the Index.
-- `total_event_count` (String) The total number of events in an index.
-- `total_raw_size_mb` (String) The total amount of raw data in an index in megabytes.
+- `total_event_count` (String) The total number of events in the index.
+- `total_raw_size_mb` (String) The total amount of raw data in the index in megabytes.
 
 ## Import
 

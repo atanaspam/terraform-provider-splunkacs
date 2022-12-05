@@ -28,17 +28,17 @@ resource "splunkacs_hec_token" "example" {
 
 ### Required
 
-- `default_index` (String) The default index associated with this HEC Token.
+- `default_index` (String) The default index associated with the HEC Token.
 - `name` (String) The name of the HEC token.
 
 ### Optional
 
-- `allowed_indexes` (Set of String) The indexes a HEC Token is allowed to publish data.
-- `default_host` (String) The default host associated with a HEC Token.
-- `default_source` (String) The default source value assigned to the data from this HEC Token.
-- `default_sourcetype` (String) The default sourcetype assigned to the data from this HEC Token.
+- `allowed_indexes` (Set of String) The indexes the HEC Token is allowed to publish data to.
+- `default_host` (String) The default Splunk host associated with the HEC Token.
+- `default_source` (String) The default source value assigned to the data from the HEC Token.
+- `default_sourcetype` (String) The default sourcetype assigned to the data from the HEC Token.
 - `disabled` (Boolean) The state of the HEC token.
-- `use_ack` (Boolean) Is indexer acknoldegment enabled for this HEC token.
+- `use_ack` (Boolean) Is indexer acknoldegment enabled for the HEC token.
 
 ### Read-Only
 
