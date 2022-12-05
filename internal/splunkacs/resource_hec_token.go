@@ -62,7 +62,7 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				},
 			},
 			"allowed_indexes": {
-				MarkdownDescription: "The indexes a HEC Token is allowed to publish data.",
+				MarkdownDescription: "The indexes the HEC Token is allowed to publish data to.",
 				Type:                types.SetType{ElemType: types.StringType},
 				Optional:            true,
 				Computed:            true,
@@ -71,7 +71,7 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				},
 			},
 			"default_host": {
-				MarkdownDescription: "The default host associated with a HEC Token.",
+				MarkdownDescription: "The default Splunk host associated with the HEC Token.",
 				Type:                types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -80,18 +80,18 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				},
 			},
 			"default_index": {
-				MarkdownDescription: "The default index associated with this HEC Token.",
+				MarkdownDescription: "The default index associated with the HEC Token.",
 				Type:                types.StringType,
 				Optional:            false,
 				Required:            true,
 			},
 			"default_source": {
-				MarkdownDescription: "The default source value assigned to the data from this HEC Token.",
+				MarkdownDescription: "The default source value assigned to the data from the HEC Token.",
 				Type:                types.StringType,
 				Optional:            true,
 			},
 			"default_sourcetype": {
-				MarkdownDescription: "The default sourcetype assigned to the data from this HEC Token.",
+				MarkdownDescription: "The default sourcetype assigned to the data from the HEC Token.",
 				Type:                types.StringType,
 				Optional:            true,
 			},
@@ -113,7 +113,7 @@ func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				},
 			},
 			"use_ack": {
-				MarkdownDescription: "Is indexer acknoldegment enabled for this HEC token.",
+				MarkdownDescription: "Is indexer acknoldegment enabled for the HEC token.",
 				Type:                types.BoolType,
 				Optional:            true,
 				Computed:            true,

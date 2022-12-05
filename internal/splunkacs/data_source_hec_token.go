@@ -54,27 +54,27 @@ func (d *hecTokenDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 				Computed:            true,
 			},
 			"allowed_indexes": {
-				MarkdownDescription: "The indexes a HEC Token is allowed to publish data.",
+				MarkdownDescription: "The indexes the HEC Token is allowed to publish data to.",
 				Type:                types.SetType{ElemType: types.StringType},
 				Computed:            true,
 			},
 			"default_host": {
-				MarkdownDescription: "The default host associated with a HEC Token.",
+				MarkdownDescription: "The default Splunk host associated with th HEC Token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
 			"default_index": {
-				MarkdownDescription: "The default index associated with this HEC Token.",
+				MarkdownDescription: "The default index associated with the HEC Token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
 			"default_source": {
-				MarkdownDescription: "The default source value assigned to the data from this HEC Token.",
+				MarkdownDescription: "The default source value assigned to the data from the HEC Token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
 			"default_sourcetype": {
-				MarkdownDescription: "The default sourcetype assigned to the data from this HEC Token.",
+				MarkdownDescription: "The default sourcetype assigned to the data from the HEC Token.",
 				Type:                types.StringType,
 				Computed:            true,
 			},
@@ -89,7 +89,7 @@ func (d *hecTokenDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 				Required:            true,
 			},
 			"use_ack": {
-				MarkdownDescription: "Is indexer acknoldegment enabled for this HEC token.",
+				MarkdownDescription: "Is indexer acknoldegment enabled for the HEC token.",
 				Type:                types.BoolType,
 				Computed:            true,
 			},
