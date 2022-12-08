@@ -78,7 +78,6 @@ func (d *hecTokenDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the HEC token.",
-				Computed:            true,
 				Required:            true,
 			},
 			"use_ack": schema.BoolAttribute{

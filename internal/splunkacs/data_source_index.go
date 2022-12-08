@@ -40,7 +40,6 @@ func (d *indexDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the Index.",
-				Computed:            true,
 				Required:            true,
 			},
 			"data_type": schema.StringAttribute{
