@@ -34,7 +34,7 @@ resource "splunkacs_hec_token" "example" {
 ### Optional
 
 - `allowed_indexes` (Set of String) The indexes the HEC Token is allowed to publish data to.
-- `default_host` (String) The default Splunk host associated with the HEC Token.
+- `default_host` (String) The default Splunk host associated with th HEC Token.
 - `default_source` (String) The default source value assigned to the data from the HEC Token.
 - `default_sourcetype` (String) The default sourcetype assigned to the data from the HEC Token.
 - `disabled` (Boolean) The state of the HEC token.

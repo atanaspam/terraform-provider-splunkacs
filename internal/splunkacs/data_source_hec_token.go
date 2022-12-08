@@ -6,8 +6,7 @@ import (
 
 	"github.com/atanaspam/splunkacs-api-go/splunkacs"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -43,63 +42,54 @@ func (d *hecTokenDataSource) Metadata(ctx context.Context, req datasource.Metada
 	resp.TypeName = req.ProviderTypeName + "_hec_token"
 }
 
-func (d *hecTokenDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func (d *hecTokenDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		MarkdownDescription: "Fetches the details about an individual HEC Token.",
 
-		Attributes: map[string]tfsdk.Attribute{
-			"id": {
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
 				MarkdownDescription: "ID of the HEC token.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"allowed_indexes": {
+			"allowed_indexes": schema.SetAttribute{
 				MarkdownDescription: "The indexes the HEC Token is allowed to publish data to.",
-				Type:                types.SetType{ElemType: types.StringType},
 				Computed:            true,
+				ElementType:         types.StringType,
 			},
-			"default_host": {
+			"default_host": schema.StringAttribute{
 				MarkdownDescription: "The default Splunk host associated with th HEC Token.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"default_index": {
+			"default_index": schema.StringAttribute{
 				MarkdownDescription: "The default index associated with the HEC Token.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"default_source": {
+			"default_source": schema.StringAttribute{
 				MarkdownDescription: "The default source value assigned to the data from the HEC Token.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"default_sourcetype": {
+			"default_sourcetype": schema.StringAttribute{
 				MarkdownDescription: "The default sourcetype assigned to the data from the HEC Token.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"disabled": {
+			"disabled": schema.BoolAttribute{
 				MarkdownDescription: "The state of the HEC token.",
-				Type:                types.BoolType,
 				Computed:            true,
 			},
-			"name": {
+			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the HEC token.",
-				Type:                types.StringType,
 				Required:            true,
 			},
-			"use_ack": {
+			"use_ack": schema.BoolAttribute{
 				MarkdownDescription: "Is indexer acknoldegment enabled for the HEC token.",
-				Type:                types.BoolType,
 				Computed:            true,
 			},
-			"token": {
+			"token": schema.StringAttribute{
 				MarkdownDescription: "The token value.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
 		},
-	}, nil
+	}
 }
 
 func (d *hecTokenDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {

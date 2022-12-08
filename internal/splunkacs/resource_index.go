@@ -6,13 +6,15 @@ import (
 	"time"
 
 	"github.com/atanaspam/splunkacs-api-go/splunkacs"
-	"github.com/atanaspam/terraform-provider-splunkacs/internal/validator"
+	v "github.com/atanaspam/terraform-provider-splunkacs/internal/validator"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -45,62 +47,56 @@ func (r *IndexResource) Metadata(ctx context.Context, req resource.MetadataReque
 	resp.TypeName = req.ProviderTypeName + "_index"
 }
 
-func (r *IndexResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func (r *IndexResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Creates a Splunk Index",
-		Attributes: map[string]tfsdk.Attribute{
-			"id": {
+
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
 				MarkdownDescription: "ID of the Index.",
-				Type:                types.StringType,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"name": {
+			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the Index.",
-				Type:                types.StringType,
 				Required:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.RequiresReplace(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"data_type": {
+			"data_type": schema.StringAttribute{
 				MarkdownDescription: "The type of data the index holds. Possible values: `event` or `metric`.",
-				Type:                types.StringType,
 				Required:            true,
-				Validators: []tfsdk.AttributeValidator{
-					stringvalidator.OneOf(validator.AllowedIndexTypes()...),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.RequiresReplace(),
+				Validators: []validator.String{
+					stringvalidator.OneOf(v.AllowedIndexTypes()...),
 				},
 			},
-			"searchable_days": {
+			"searchable_days": schema.Int64Attribute{
 				MarkdownDescription: "Number of days the index is searchable.",
-				Type:                types.Int64Type,
 				Computed:            true,
 				Optional:            true,
 			},
-			"max_data_size_mb": {
+			"max_data_size_mb": schema.Int64Attribute{
 				MarkdownDescription: "The maximum size of the index in megabytes.",
-				Type:                types.Int64Type,
 				Computed:            true,
 				Optional:            true,
 			},
-			"total_event_count": {
+			"total_event_count": schema.StringAttribute{
 				MarkdownDescription: "The total number of events in the index.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			"total_raw_size_mb": {
+			"total_raw_size_mb": schema.StringAttribute{
 				MarkdownDescription: "The total amount of raw data in the index in megabytes.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
 		},
-	}, nil
+	}
 }
 
 func (r *IndexResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
