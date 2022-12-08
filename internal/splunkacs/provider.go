@@ -6,11 +6,10 @@ import (
 
 	"github.com/atanaspam/splunkacs-api-go/splunkacs"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
+	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -34,23 +33,20 @@ func (p *AcsProvider) Metadata(ctx context.Context, req provider.MetadataRequest
 	resp.Version = p.version
 }
 
-func (p *AcsProvider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func (p *AcsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		MarkdownDescription: "The Splunk Admin Config Service (ACS) provider can interact with the resources supported by the Splunk Admin Config Service. The provider needs to be configured with the proper credentials before it can be used. It requires terraform version 1.0 or later.",
-		Attributes: map[string]tfsdk.Attribute{
-			"deployment_name": {
-				Type:                types.StringType,
+		Attributes: map[string]schema.Attribute{
+			"deployment_name": schema.StringAttribute{
+				MarkdownDescription: "The URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.",
 				Optional:            true,
-				MarkdownDescription: "he URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.",
 			},
-			"token": {
-				Type:                types.StringType,
-				Optional:            true,
-				Sensitive:           true,
+			"token": schema.StringAttribute{
 				MarkdownDescription: "The JWT authentication token you create in Splunk Cloud Platform. Can be set via the `SPLUNK_AUTH_TOKEN` environment variable.",
+				Optional:            true,
 			},
 		},
-	}, nil
+	}
 }
 
 func (p *AcsProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {

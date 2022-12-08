@@ -8,10 +8,11 @@ import (
 	"github.com/atanaspam/splunkacs-api-go/splunkacs"
 	// "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -48,90 +49,70 @@ func (r *HecTokenResource) Metadata(ctx context.Context, req resource.MetadataRe
 	resp.TypeName = req.ProviderTypeName + "_hec_token"
 }
 
-func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func (r *HecTokenResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	// func (r *HecTokenResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Creates a Http Event Collector Token",
-		Attributes: map[string]tfsdk.Attribute{
-			"id": {
+
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
 				MarkdownDescription: "ID of the HEC token.",
-				Type:                types.StringType,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"allowed_indexes": {
+			"allowed_indexes": schema.SetAttribute{
 				MarkdownDescription: "The indexes the HEC Token is allowed to publish data to.",
-				Type:                types.SetType{ElemType: types.StringType},
+				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
-				},
 			},
-			"default_host": {
-				MarkdownDescription: "The default Splunk host associated with the HEC Token.",
-				Type:                types.StringType,
+			"default_host": schema.StringAttribute{
+				MarkdownDescription: "The default Splunk host associated with th HEC Token.",
 				Optional:            true,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"default_index": {
+			"default_index": schema.StringAttribute{
 				MarkdownDescription: "The default index associated with the HEC Token.",
-				Type:                types.StringType,
 				Optional:            false,
 				Required:            true,
 			},
-			"default_source": {
+			"default_source": schema.StringAttribute{
 				MarkdownDescription: "The default source value assigned to the data from the HEC Token.",
-				Type:                types.StringType,
 				Optional:            true,
 			},
-			"default_sourcetype": {
+			"default_sourcetype": schema.StringAttribute{
 				MarkdownDescription: "The default sourcetype assigned to the data from the HEC Token.",
-				Type:                types.StringType,
 				Optional:            true,
 			},
-			"disabled": {
+			"disabled": schema.BoolAttribute{
 				MarkdownDescription: "The state of the HEC token.",
-				Type:                types.BoolType,
 				Optional:            true,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
-				},
 			},
-			"name": {
+			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the HEC token.",
-				Type:                types.StringType,
 				Required:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.RequiresReplace(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"use_ack": {
+			"use_ack": schema.BoolAttribute{
 				MarkdownDescription: "Is indexer acknoldegment enabled for the HEC token.",
-				Type:                types.BoolType,
 				Optional:            true,
 				Computed:            true,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
-				},
 			},
-			"token": {
+			"token": schema.StringAttribute{
 				MarkdownDescription: "The token value.",
-				Type:                types.StringType,
 				Computed:            true,
 			},
-			// "timeouts": timeouts.Attributes(ctx, timeouts.Opts{
-			// 	Create: true,
-			// 	Update: true,
-			// }),
 		},
-	}, nil
+	}
 }
 
 func (r *HecTokenResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
