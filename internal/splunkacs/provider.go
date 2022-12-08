@@ -44,6 +44,7 @@ func (p *AcsProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 			"token": schema.StringAttribute{
 				MarkdownDescription: "The JWT authentication token you create in Splunk Cloud Platform. Can be set via the `SPLUNK_AUTH_TOKEN` environment variable.",
 				Optional:            true,
+				Sensitive:           true,
 			},
 		},
 	}

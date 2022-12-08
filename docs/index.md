@@ -24,5 +24,5 @@ provider "splunkacs" {
 
 ### Optional
 
-- `deployment_name` (String) he URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.
+- `deployment_name` (String) The URL prefix of your Splunk Cloud Platform deployment (e.g. csms-2io6tw-47150). Can be set via the `SPLUNK_DEPLOYMENT_NAME` environment variable.
 - `token` (String, Sensitive) The JWT authentication token you create in Splunk Cloud Platform. Can be set via the `SPLUNK_AUTH_TOKEN` environment variable.
