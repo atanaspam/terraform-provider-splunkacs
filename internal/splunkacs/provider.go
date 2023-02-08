@@ -14,7 +14,6 @@ import (
 )
 
 var _ provider.Provider = &AcsProvider{}
-var _ provider.ProviderWithMetadata = &AcsProvider{}
 
 type AcsProvider struct {
 	// version is set to the provider version on release, "dev" when the
