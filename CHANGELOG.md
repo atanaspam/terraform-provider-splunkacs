@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/atanaspam/terraform-provider-splunkacs/compare/v0.1.0...v0.2.0) (2023-02-08)
+
+
+### Features
+
+* upgrade terraform plugin framework dependencies ([#23](https://github.com/atanaspam/terraform-provider-splunkacs/issues/23)) ([2f76e23](https://github.com/atanaspam/terraform-provider-splunkacs/commit/2f76e23091ee368d35864463646dba5354ebdce4))
+
 ## [0.1.0](https://github.com/atanaspam/terraform-provider-splunkacs/compare/v0.0.2...v0.1.0) (2022-12-05)
 
 
