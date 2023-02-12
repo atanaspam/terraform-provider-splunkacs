@@ -3,7 +3,7 @@ module github.com/atanaspam/terraform-provider-splunkacs
 go 1.18
 
 require (
-	github.com/atanaspam/splunkacs-api-go v1.2.0
+	github.com/atanaspam/splunkacs-api-go v1.5.0
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-framework v1.1.1
 	github.com/hashicorp/terraform-plugin-framework-validators v0.10.0
