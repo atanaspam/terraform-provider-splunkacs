@@ -277,11 +277,11 @@ func waitIndexPropagation(ctx context.Context, client *splunkacs.SplunkAcsClient
 	retries := 20
 	for i < retries {
 		tflog.Info(ctx, fmt.Sprintf("waiting for Index to become eventually consistent. Retry: %d\n", i))
-		indexResp, httpResp, err := client.GetIndex(indexName)
-		if err != nil && httpResp.StatusCode != 404 {
+		indexResp, apiResp, err := client.GetIndex(indexName)
+		if err != nil && apiResp.StatusCode != 404 {
 			tflog.Error(ctx, "encountered an unexpected error while waiting for Index to become eventually consistent")
 			return nil, err
-		} else if err != nil && httpResp.StatusCode == 404 {
+		} else if err != nil && apiResp.StatusCode == 404 {
 			i++
 			time.Sleep(10 * time.Second)
 			continue

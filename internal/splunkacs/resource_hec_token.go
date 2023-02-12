@@ -340,11 +340,11 @@ func waitHecCreatePropagation(ctx context.Context, client *splunkacs.SplunkAcsCl
 	retries := 20
 	for i < retries {
 		tflog.Debug(ctx, fmt.Sprintf("waiting for HEC token to become available. Retry: %d", i))
-		hecResp, httpResp, err := client.GetHecToken(hecCreateResponse.CreateResponseItem.Spec.Name)
-		if err != nil && httpResp.StatusCode != 404 {
+		hecResp, apiResp, err := client.GetHecToken(hecCreateResponse.CreateResponseItem.Spec.Name)
+		if err != nil && apiResp.StatusCode != 404 {
 			tflog.Error(ctx, "encountered an unexpected error while waiting for HEC to become avaialable")
 			return nil, err
-		} else if err != nil && httpResp.StatusCode == 404 {
+		} else if err != nil && apiResp.StatusCode == 404 {
 			i++
 			time.Sleep(10 * time.Second)
 			continue
