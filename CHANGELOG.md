@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/atanaspam/terraform-provider-splunkacs/compare/v0.3.0...v0.4.0) (2023-02-12)
+
+
+### Features
+
+* Add Stack Status DataSource ([38b9eec](https://github.com/atanaspam/terraform-provider-splunkacs/commit/38b9eec943e0cb4491fccdb1ef73985bf29ab5b2))
+
 ## [0.3.0](https://github.com/atanaspam/terraform-provider-splunkacs/compare/v0.2.0...v0.3.0) (2023-02-12)
 
 
