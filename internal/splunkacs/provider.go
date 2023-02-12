@@ -117,7 +117,7 @@ func (p *AcsProvider) Configure(ctx context.Context, req provider.ConfigureReque
 			"Unable to Create Splunk Admin Config API Client",
 			"An unexpected error occurred when creating the Splunk Admin Config API client. "+
 				"If the error is not clear, please contact the provider developers.\n\n"+
-				"HashiCups Client Error: "+err.Error(),
+				"splunkacs Client Error: "+err.Error(),
 		)
 		return
 	}
@@ -137,6 +137,7 @@ func (p *AcsProvider) DataSources(ctx context.Context) []func() datasource.DataS
 	return []func() datasource.DataSource{
 		NewHecTokenDataSource,
 		NewIndexDataSource,
+		NewStackStatusDataSource,
 	}
 }
 
